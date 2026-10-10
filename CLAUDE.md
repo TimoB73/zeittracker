@@ -30,3 +30,4 @@ Einfache Handy-Web-App (PWA) zum Erfassen von Zeiten per Start/Stopp für berufl
 - 2026-10-10: Umbenennen und Löschen über die einfachen Browser-Dialoge (`prompt`/`confirm`), keine eigenen Dialoge.
 - 2026-10-10: Service Worker arbeitet "Netzwerk zuerst, sonst Cache", damit Updates sofort ankommen und die App trotzdem offline läuft. Alle Pfade relativ, damit GitHub Pages im Unterordner funktioniert.
 - 2026-10-10: Auf dem PC ist weder Python noch Node installiert, daher `server.ps1` als lokaler Testserver (PowerShell, Port 8080).
+- 2026-10-10: Veröffentlicht über GitHub Pages aus dem Repository https://github.com/TimoB73/zeittracker (Branch `main`, Ordner `/`). Adresse: https://timob73.github.io/zeittracker/ – jeder Push auf `main` aktualisiert die App.
