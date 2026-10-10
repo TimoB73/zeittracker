@@ -3,7 +3,7 @@
 const SPEICHER = 'zeittracker.v1';
 
 // Zustand:
-//   aktivitaeten: [{ id, name }]
+//   aktivitaeten: [{ id, name, uhrAb }]            (uhrAb: Zeitpunkt des letzten Zurücksetzens der Uhr)
 //   eintraege:    [{ aktivitaetId, start, ende }]  (abgeschlossene Messungen, Zeitstempel in ms)
 //   laufend:      { aktivitaetId, start } oder null
 let zustand = laden();
@@ -93,6 +93,14 @@ function umschalten(id) {
   zeichnen();
 }
 
+// Die Uhr einer Aktivität zeigt alle Zeiten seit "uhrAb" und läuft beim nächsten Start dort weiter.
+// Zurücksetzen stellt nur die Uhr auf 0; die Summen für heute und die Woche bleiben erhalten.
+function zuruecksetzen(id) {
+  zustand.aktivitaeten.find(x => x.id === id).uhrAb = Date.now();
+  speichern();
+  zeichnen();
+}
+
 function anlegen(name) {
   const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   zustand.aktivitaeten.push({ id, name });
@@ -147,7 +155,12 @@ function zeichnen() {
     kopf.append(stift, kreuz);
     karte.append(kopf);
 
-    if (laeuft) karte.append(element('div', 'uhr'));
+    const uhrzeile = element('div', 'uhrzeile');
+    uhrzeile.append(element('div', 'uhr'));
+    const zurueck = element('button', 'zurueck', 'Zurücksetzen');
+    zurueck.dataset.aktion = 'zuruecksetzen';
+    uhrzeile.append(zurueck);
+    karte.append(uhrzeile);
 
     const summen = element('div', 'summen');
     const heute = element('span', null, 'Heute ');
@@ -180,8 +193,8 @@ function zeitenAktualisieren() {
     heuteGesamt += heute;
     karte.querySelector('.heute').textContent = alsDauer(heute);
     karte.querySelector('.woche').textContent = alsDauer(summe(id, woche, jetzt));
-    const uhr = karte.querySelector('.uhr');
-    if (uhr) uhr.textContent = alsUhr(jetzt - zustand.laufend.start);
+    const a = zustand.aktivitaeten.find(x => x.id === id);
+    karte.querySelector('.uhr').textContent = alsUhr(summe(id, a.uhrAb || 0, jetzt));
   }
   gesamt.textContent = 'Heute gesamt: ' + alsDauer(heuteGesamt);
 }
@@ -193,6 +206,7 @@ liste.addEventListener('click', ereignis => {
   if (!knopf) return;
   const id = knopf.closest('.karte').dataset.id;
   if (knopf.dataset.aktion === 'umschalten') umschalten(id);
+  if (knopf.dataset.aktion === 'zuruecksetzen') zuruecksetzen(id);
   if (knopf.dataset.aktion === 'umbenennen') umbenennen(id);
   if (knopf.dataset.aktion === 'loeschen') loeschen(id);
 });

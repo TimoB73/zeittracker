@@ -92,13 +92,34 @@ h1 {
 
 .klein:active { background: var(--rand); }
 
-.uhr {
+.uhrzeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   margin: 6px 0 2px;
+}
+
+.uhr {
   font-size: 40px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--gruen);
+  color: var(--grau);
 }
+
+.laeuft .uhr { color: var(--gruen); }
+
+.zurueck {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 2px solid var(--rand);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--grau);
+  font-size: 15px;
+}
+
+.zurueck:active { background: var(--rand); }
 
 .summen {
   display: flex;
